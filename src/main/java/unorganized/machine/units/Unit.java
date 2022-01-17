@@ -1,5 +1,6 @@
 package unorganized.machine.units;
 
+import unorganized.machine.calculator.StateHandler;
 import unorganized.machine.edges.Edge;
 
 import java.util.Collection;
@@ -21,7 +22,7 @@ public class Unit {
     /**
      * Table that stores all existing units with their IDs.
      */
-    private static final Map<Long, Unit> unitTable = new HashMap<>();
+    private static final Map<Long, Unit> unitMap = new HashMap<>();
 
     /**
      * ID of unit object that was created latest.
@@ -46,27 +47,28 @@ public class Unit {
     /**
      * Calculator for current unit state.
      */
-    private final StateCalculator calculator;
+    private final StateHandler stateHandler;
 
     /**
      * Constructor that create a new Unit object.
      * @param id unit ID
      * @param state initial unit state
+     * @param stateHandler State calculator object
      */
-    Unit(long id, boolean state, StateCalculator stateCalculator) {
+    Unit(long id, boolean state, StateHandler stateHandler) {
         this.id = id;
         this.currentState = state;
-        this.calculator = stateCalculator;
+        this.stateHandler = stateHandler;
         // Registering new Unit
-        unitTable.put(this.id, this);
+        unitMap.put(this.id, this);
     }
 
     /**
      * The function that receives a pulse from the control and updates the current state.
      */
     public void inputPulse(){
-        if (calculator != null) {
-            this.currentState = calculator.calculate(previousStates);
+        if (stateHandler != null) {
+            this.currentState = stateHandler.calculate(previousStates);
         }
         else {
             throw new NullPointerException("There is no existing state calculator!");
@@ -111,32 +113,40 @@ public class Unit {
     }
 
     /**
+     * Getter for unitTable.
+     * @return Map that contains all unit data
+     */
+    public static Map<Long, Unit> getUnitMap(){
+        return unitMap;
+    }
+
+    @Override
+    public String toString(){
+        return "ID: " + this.id + "\n"
+                + "state: " + this.currentState + "\n"
+                + "state calculator: " + this.stateHandler.getClass().getSimpleName() + "\n";
+    }
+
+    /**
      * Builder class that create Unit instance.
      * Unit instance must be created through this builder.
      */
     public static class UnitBuilder {
 
-        protected long id;
-        protected boolean state;
-        protected StateCalculator stateCalculator;
+        private long id;
+        private boolean state;
+        private StateHandler stateHandler;
 
         /**
          * Constructor for Unit builder without unit ID.
          */
         public UnitBuilder(){
             long newId = latestUnitId;
-            while (unitTable.containsKey(newId)){
+            while (unitMap.containsKey(newId)){
                 newId--;
             }
             this.id = newId;
-        }
-
-        /**
-         * Constructor for Unit builder.
-         * @param id unit ID
-         */
-        public UnitBuilder(long id){
-            this.id = id;
+            latestUnitId = this.id;
         }
 
         /**
@@ -161,11 +171,11 @@ public class Unit {
 
         /**
          * Setter for state calculator
-         * @param stateCalculator state calculator
+         * @param stateHandler state calculator
          * @return UnitBuilder instance
          */
-        public UnitBuilder setStateCalculator(StateCalculator stateCalculator){
-            this.stateCalculator = stateCalculator;
+        public UnitBuilder setStateHandler(StateHandler stateHandler){
+            this.stateHandler = stateHandler;
             return this;
         }
 
@@ -174,8 +184,8 @@ public class Unit {
          * @return new Unit instance
          */
         public Unit build(){
-            return new Unit(this.id, this.state, this.stateCalculator);
-        };
+            return new Unit(this.id, this.state, this.stateHandler);
+        }
     }
 }
 
