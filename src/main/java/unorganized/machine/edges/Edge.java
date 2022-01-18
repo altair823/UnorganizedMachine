@@ -4,7 +4,6 @@ import unorganized.machine.calculator.StateHandler;
 import unorganized.machine.units.Unit;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -79,9 +78,9 @@ public class Edge {
     }
 
     /**
-     * Hand over the state of previous(tail) unit to next(head) unit.
+     * Deliver the state of previous(tail) unit to next(head) unit.
      */
-    public void handOverState(){
+    public void deliverState(){
         this.headUnit.addPreviousStates(this.stateHandler.deliver(tailUnit.getCurrentState()));
     }
 
@@ -95,7 +94,7 @@ public class Edge {
 
     @Override
     public String toString(){
-        return "ID: " + this.id + "\n"
+        return "Edge ID: " + this.id + "\n"
                 + "tailUnitId: " + this.tailUnit.getId() + "\n"
                 + "headUnitId: " + this.headUnit.getId() + "\n";
     }

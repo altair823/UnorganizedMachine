@@ -1,6 +1,7 @@
 package unorganized.machine.calculator;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Handler interface that Handle current state of unit.
@@ -20,5 +21,5 @@ public interface StateHandler {
      * @param state state of tail unit
      * @return status to be delivered to the head unit
      */
-    boolean deliver(boolean state);
+    List<Boolean> deliver(boolean state);
 }

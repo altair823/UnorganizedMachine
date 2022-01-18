@@ -1,10 +1,7 @@
 package unorganized.machine.mapper;
 
-import unorganized.machine.units.Unit;
-
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Data mapper for building unit.
@@ -20,5 +17,5 @@ public interface DataMapper {
      * @param dataList data needed to create a new unit.
      * @return Map that contain data
      */
-    Map<String, Object> ListToUnitDataMap(List<String> dataList);
+    Map<String, Object> map(List<String> dataList);
 }

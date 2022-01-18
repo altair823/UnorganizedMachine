@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import unorganized.machine.calculator.StateHandler;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,8 +28,8 @@ class UnitTest {
             }
 
             @Override
-            public boolean deliver(boolean state) {
-                return state;
+            public List<Boolean> deliver(boolean state) {
+                return List.of(state);
             }
         };
         this.unitBuilder = new Unit.UnitBuilder();
@@ -47,7 +48,7 @@ class UnitTest {
         Unit unit = this.unitBuilder.setId(0).setState(true).setStateHandler(this.stateHandler).build();
         // Pulse test
         unit.addPreviousStates(new LinkedList<>(List.of(true, true)));
-        unit.inputPulse();
+        unit.calculateState();
         assertFalse(unit.getCurrentState());
     }
 }

@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class ATypeMapper implements DataMapper{
     @Override
-    public Map<String, Object> ListToUnitDataMap(List<String> dataList) {
+    public Map<String, Object> map(List<String> dataList) {
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("type", dataList.get(0));
         dataMap.put("id", Long.parseLong(dataList.get(1)));

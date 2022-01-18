@@ -20,13 +20,13 @@ class UnitLayoutReaderTest {
     private final UnitLayoutReader unitLayoutReader;
 
     public UnitLayoutReaderTest() throws FileNotFoundException, FileSystemException {
-        this.unitLayoutReader = new UnitLayoutReader(new File("/Users/altair823/IdeaProjects/UnorganizedMachine/layout/example1.ulf"));
+        this.unitLayoutReader = new UnitLayoutReader(new File("/Users/altair823/IdeaProjects/UnorganizedMachine/layout/TuringExample.ulf"));
     }
 
     @Test
     public void verifyUnitLayoutFileTest(){
         assertDoesNotThrow(()->{
-            UnitLayoutReader unitLayoutReaderTest = new UnitLayoutReader(new File("/Users/altair823/IdeaProjects/UnorganizedMachine/layout/example1.ulf"));
+            UnitLayoutReader unitLayoutReaderTest = new UnitLayoutReader(new File("/Users/altair823/IdeaProjects/UnorganizedMachine/layout/TuringExample.ulf"));
         });
     }
 
@@ -42,8 +42,8 @@ class UnitLayoutReaderTest {
     public void mapAllLineTest(){
         Map<String, DataMapper> dataMapperMap = new HashMap<>();
         dataMapperMap.put("A", new ATypeMapper());
-        List<Map<String, Object>> mapList = this.unitLayoutReader.mapAllLine(dataMapperMap);
-        for (Map<String, Object> map: mapList){
+        this.unitLayoutReader.mapAllLine(dataMapperMap);
+        for (Map<String, Object> map: this.unitLayoutReader.getMachineData()){
             map.forEach((key, value)-> System.out.println(key + " : " + value));
             System.out.println("-----------------");
         }
@@ -53,7 +53,8 @@ class UnitLayoutReaderTest {
     public void createAllUnitsTest(){
         Map<String, DataMapper> dataMapperMap = new HashMap<>();
         dataMapperMap.put("A", new ATypeMapper());
-        this.unitLayoutReader.createAllUnits(this.unitLayoutReader.mapAllLine(dataMapperMap));
+        this.unitLayoutReader.mapAllLine(dataMapperMap);
+        this.unitLayoutReader.createAllUnits();
         Unit.getUnitMap().forEach((id, unit)-> System.out.println(unit));
     }
 
@@ -61,9 +62,9 @@ class UnitLayoutReaderTest {
     public void createAllEdgesTest(){
         Map<String, DataMapper> dataMapperMap = new HashMap<>();
         dataMapperMap.put("A", new ATypeMapper());
-        List<Map<String, Object>> machineData = this.unitLayoutReader.mapAllLine(dataMapperMap);
-        this.unitLayoutReader.createAllUnits(machineData);
-        this.unitLayoutReader.createAllEdges(machineData);
+        this.unitLayoutReader.mapAllLine(dataMapperMap);
+        this.unitLayoutReader.createAllUnits();
+        this.unitLayoutReader.createAllEdges();
         Edge.getEdgeMap().forEach((id, edge)-> System.out.println(edge));
     }
 }

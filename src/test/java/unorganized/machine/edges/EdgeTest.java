@@ -5,6 +5,7 @@ import unorganized.machine.calculator.StateHandler;
 import unorganized.machine.units.Unit;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,8 +26,8 @@ class EdgeTest {
         }
 
         @Override
-        public boolean deliver(boolean state) {
-            return state;
+        public List<Boolean> deliver(boolean state) {
+            return List.of(state);
         }
     };
 
@@ -68,10 +69,10 @@ class EdgeTest {
         this.units.get(1).addPreviousStates(new LinkedList<>());
 
         // execute state hand over function.
-        this.edges.forEach(Edge::handOverState);
+        this.edges.forEach(Edge::deliverState);
 
         // check head unit's previous state list.
-        this.units.get(1).inputPulse();
+        this.units.get(1).calculateState();
         assertFalse(this.units.get(1).getCurrentState());
     }
 }

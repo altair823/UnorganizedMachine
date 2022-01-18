@@ -5,6 +5,7 @@ import unorganized.machine.edges.Edge;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -42,7 +43,7 @@ public class Unit {
     /**
      * List that holds the state of previous units.
      */
-    private Collection<Boolean> previousStates;
+    private List<Boolean> previousStates;
 
     /**
      * Calculator for current unit state.
@@ -66,9 +67,10 @@ public class Unit {
     /**
      * The function that receives a pulse from the control and updates the current state.
      */
-    public void inputPulse(){
+    public void calculateState(){
         if (stateHandler != null) {
             this.currentState = stateHandler.calculate(previousStates);
+            this.previousStates = null;
         }
         else {
             throw new NullPointerException("There is no existing state calculator!");
@@ -92,18 +94,10 @@ public class Unit {
     }
 
     /**
-     * Add state of previous unit.
-     * @param state state of previous unit
-     */
-    public void addPreviousStates(boolean state){
-        this.previousStates.add(state);
-    }
-
-    /**
-     * Add state collection from previous units.
+     * Add collection of state from previous units.
      * @param states collection of states
      */
-    public void addPreviousStates(Collection<Boolean> states){
+    public void addPreviousStates(List<Boolean> states){
         if (this.previousStates != null) {
             this.previousStates.addAll(states);
         }
@@ -122,7 +116,7 @@ public class Unit {
 
     @Override
     public String toString(){
-        return "ID: " + this.id + "\n"
+        return "Unit ID: " + this.id + "\n"
                 + "state: " + this.currentState + "\n"
                 + "state calculator: " + this.stateHandler.getClass().getSimpleName() + "\n";
     }

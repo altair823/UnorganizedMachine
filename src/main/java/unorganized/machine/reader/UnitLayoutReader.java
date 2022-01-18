@@ -21,17 +21,12 @@ public class UnitLayoutReader {
     /**
      * File scanner.
      */
-    protected final Scanner scanner;
+    private final Scanner scanner;
 
     /**
-     * Map that contains all unit layout data read from ULF.
+     * Data containing layout for unit of machine read from file.
      */
-    protected final Map<Long, Map<String, Object>> unitMap = new HashMap<>();
-
-    /**
-     * Map that contains all edge layout data read from ULF.
-     */
-    protected final Map<Long, Map<String, Object>> edgeMap = new HashMap<>();
+    private final List<Map<String, Object>> machineData = new LinkedList<>();
 
     /**
      * Constructor that create scanner for reading unit layout file.
@@ -58,33 +53,36 @@ public class UnitLayoutReader {
      * Method reading a line of the layout file and split it to given string.
      * @return a list of strings.
      */
-    protected List<String> readALine(){
+    List<String> readALine(){
         String line = this.scanner.nextLine();
         return List.of(line.split(" "));
     }
 
+    /**
+     * Getter for machine data read from file.
+     * @return machine data
+     */
+    List<Map<String, Object>> getMachineData() {
+        return machineData;
+    }
 
     /**
      * Method setting all layout data to machine data Map.
      * @param dataMapper Map that contains mapper objects mapping data from reed list.
-     * @return Map containing total unit data.
      */
-    protected List<Map<String, Object>> mapAllLine(Map<String, DataMapper> dataMapper){
-        List<Map<String, Object>> machineDataMapList = new LinkedList<>();
+    public void mapAllLine(Map<String, DataMapper> dataMapper){
         while (this.scanner.hasNext()) {
             List<String> line = this.readALine();
-            Map<String, Object> lineDataMap = dataMapper.get(line.get(0)).ListToUnitDataMap(line);
-            machineDataMapList.add(lineDataMap);
+            Map<String, Object> lineDataMap = dataMapper.get(line.get(0)).map(line);
+            this.machineData.add(lineDataMap);
         }
-        return machineDataMapList;
     }
 
     /**
      * Method creating all unit instances and allocate it to unitMap.
-     * @param machineData Map that contains data read from unit layout file.
      */
-    public void createAllUnits(List<Map<String, Object>> machineData){
-        for (Map<String, Object> dataMap : machineData){
+    void createAllUnits(){
+        for (Map<String, Object> dataMap : this.machineData){
             new Unit.UnitBuilder()
                     .setId((Long) dataMap.get("id"))
                     .setState((Boolean) dataMap.get("state"))
@@ -95,10 +93,9 @@ public class UnitLayoutReader {
 
     /**
      * Method creating all edge instances and allocate it to edgeMap.
-     * @param machineData Map that contains data read from unit layout file.
      */
-    public void createAllEdges(List<Map<String, Object>> machineData){
-        machineData.forEach(unitDataMap -> {
+    void createAllEdges(){
+        this.machineData.forEach(unitDataMap -> {
             if (unitDataMap.get("previousUnitId") instanceof List<?> previousUnitId) {
                 previousUnitId.forEach(obj -> {
                     if (obj instanceof Long previousId) {
@@ -111,5 +108,15 @@ public class UnitLayoutReader {
                 });
             }
         });
+    }
+
+    /**
+     * Method creating all units and edges.
+     * To create units and edges in the right order,
+     * need to use this method instead other method.
+     */
+    public void createAllUnitsAndEdges(){
+        this.createAllUnits();
+        this.createAllEdges();
     }
 }

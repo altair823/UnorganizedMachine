@@ -1,6 +1,7 @@
 package unorganized.machine.calculator;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ public class ATypeHander implements StateHandler {
     }
 
     @Override
-    public boolean deliver(boolean state) {
-        return state;
+    public List<Boolean> deliver(boolean state) {
+        return new LinkedList<>(List.of(state));
     }
 }
