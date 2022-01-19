@@ -1,6 +1,7 @@
 package unorganized.machine.reader;
 
-import unorganized.machine.handler.StateHandler;
+import unorganized.machine.calculator.StateCalculator;
+import unorganized.machine.deliver.StateDeliver;
 import unorganized.machine.edges.Edge;
 import unorganized.machine.mapper.DataMapper;
 import unorganized.machine.units.Unit;
@@ -86,7 +87,7 @@ public class UnitLayoutReader {
             new Unit.UnitBuilder()
                     .setId((Long) dataMap.get("id"))
                     .setState((Boolean) dataMap.get("state"))
-                    .setStateHandler((StateHandler) dataMap.get("stateHandler"))
+                    .setStateHandler((StateCalculator) dataMap.get("stateHandler"))
                     .build();
         }
     }
@@ -102,7 +103,7 @@ public class UnitLayoutReader {
                         new Edge.EdgeBuilder()
                                 .setTailUnit(Unit.getUnitMap().get(previousId))
                                 .setHeadUnit(Unit.getUnitMap().get((Long) unitDataMap.get("id")))
-                                .setStateHandler((StateHandler) unitDataMap.get("stateHandler"))
+                                .setStateDeliver(new StateDeliver())
                                 .build();
                     }
                 });

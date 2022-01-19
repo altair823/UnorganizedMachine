@@ -1,7 +1,8 @@
 package unorganized.machine.edges;
 
 import org.junit.jupiter.api.Test;
-import unorganized.machine.handler.StateHandler;
+import unorganized.machine.calculator.StateCalculator;
+import unorganized.machine.deliver.StateDeliver;
 import unorganized.machine.units.Unit;
 
 import java.util.Collection;
@@ -13,25 +14,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class EdgeTest {
     private final List<Unit> units = new LinkedList<>();
     private final List<Edge> edges = new LinkedList<>();
-    private final StateHandler stateHandler = new StateHandler() {
-        @Override
-        public boolean calculate(Collection<Boolean> states) {
-            if (states instanceof List<Boolean> stateList) {
-                return !(stateList.get(0) && stateList.get(1));
-            }
-            else {
-                throw new ClassCastException();
-            }
-        }
-
-        @Override
-        public List<Boolean> deliver(boolean state) {
-            return List.of(state);
-        }
-    };
+    private final StateDeliver stateDeliver = new StateDeliver();
 
     EdgeTest(){
         // create two units.
+        StateCalculator stateHandler = states -> {
+            if (states instanceof List<Boolean> stateList) {
+                return !(stateList.get(0) && stateList.get(1));
+            } else {
+                throw new ClassCastException();
+            }
+        };
         units.add(new Unit.UnitBuilder().setState(true).setStateHandler(stateHandler).build());
         units.add(new Unit.UnitBuilder().setState(true).setStateHandler(stateHandler).build());
     }
@@ -41,7 +34,7 @@ class EdgeTest {
         this.edges.add(new Edge.EdgeBuilder()
                 .setTailUnit(units.get(0))
                 .setHeadUnit(units.get(1))
-                .setStateHandler(this.stateHandler)
+                .setStateDeliver(new StateDeliver())
                 .build());
 
         // check tail and head unit.
@@ -56,16 +49,14 @@ class EdgeTest {
         this.edges.add(new Edge.EdgeBuilder()
                 .setTailUnit(units.get(0))
                 .setHeadUnit(units.get(1))
-                .setStateHandler(this.stateHandler)
+                .setStateDeliver(this.stateDeliver)
                 .build());
         this.edges.add(new Edge.EdgeBuilder()
                 .setTailUnit(units.get(0))
                 .setHeadUnit(units.get(1))
-                .setStateHandler(this.stateHandler)
+                .setStateDeliver(this.stateDeliver)
                 .build());
 
-        // set previous list instance in unit1.
-        this.units.get(1).addPreviousStates(new LinkedList<>());
 
         // execute state hand over function.
         this.edges.forEach(Edge::deliverState);

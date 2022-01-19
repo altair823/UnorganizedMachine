@@ -1,6 +1,6 @@
 package unorganized.machine.edges;
 
-import unorganized.machine.handler.StateHandler;
+import unorganized.machine.deliver.StateDeliver;
 import unorganized.machine.units.Unit;
 
 import java.util.HashMap;
@@ -46,18 +46,18 @@ public class Edge {
     /**
      * Handler that set a rule handing over the state from tail unit to head unit.
      */
-    private final StateHandler stateHandler;
+    private final StateDeliver stateDeliver;
 
     /**
      * Constructor for edge instance.
      * @param tailUnit tail unit
      * @param headUnit head unit
      */
-    public Edge(long id, Unit tailUnit, Unit headUnit, StateHandler stateHandler){
+    public Edge(long id, Unit tailUnit, Unit headUnit, StateDeliver stateDeliver){
         this.id = id;
         this.tailUnit = tailUnit;
         this.headUnit = headUnit;
-        this.stateHandler = stateHandler;
+        this.stateDeliver = stateDeliver;
         edgeMap.put(this.id, this);
     }
 
@@ -81,7 +81,14 @@ public class Edge {
      * Deliver the state of previous(tail) unit to next(head) unit.
      */
     public void deliverState(){
-        this.headUnit.addPreviousStates(this.stateHandler.deliver(tailUnit.getCurrentState()));
+        this.headUnit.addPreviousStates(this.stateDeliver.deliver(tailUnit.getCurrentState()));
+    }
+
+    /**
+     * Reverse the rule used when delivering state.
+     */
+    public void reverseDeliverRule(){
+        this.stateDeliver.reverse();
     }
 
     /**
@@ -106,7 +113,7 @@ public class Edge {
         private long id;
         private Unit tailUnit;
         private Unit headUnit;
-        private StateHandler stateHandler;
+        private StateDeliver stateDeliver;
 
         /**
          * Constructor for EdgeBuilder.
@@ -154,11 +161,11 @@ public class Edge {
 
         /**
          * Setter for state handler for setting rule of hand over the state.
-         * @param stateHandler state handler instance
+         * @param stateDeliver state handler instance
          * @return EdgeBuilder instance
          */
-        public EdgeBuilder setStateHandler(StateHandler stateHandler){
-            this.stateHandler = stateHandler;
+        public EdgeBuilder setStateDeliver(StateDeliver stateDeliver){
+            this.stateDeliver = stateDeliver;
             return this;
         }
 
@@ -167,7 +174,7 @@ public class Edge {
          * @return new Edge instance
          */
         public Edge build(){
-            return new Edge(this.id, this.tailUnit, this.headUnit, this.stateHandler);
+            return new Edge(this.id, this.tailUnit, this.headUnit, this.stateDeliver);
         }
     }
 }

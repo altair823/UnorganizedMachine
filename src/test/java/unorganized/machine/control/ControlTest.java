@@ -3,16 +3,12 @@ package unorganized.machine.control;
 import org.junit.jupiter.api.Test;
 import unorganized.machine.edges.Edge;
 import unorganized.machine.mapper.ATypeMapper;
-import unorganized.machine.mapper.DataMapper;
 import unorganized.machine.reader.UnitLayoutReader;
 import unorganized.machine.units.Unit;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
 import java.nio.file.FileSystemException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,6 +63,29 @@ class ControlTest {
             // Print result states.
             Unit.getUnitMap().forEach((id, unit) -> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
             System.out.println();
+        }
+    }
+
+    @Test
+    void reverseDeliverRuleTest() throws FileSystemException, FileNotFoundException {
+        // Read data.
+        control.readLayout(new UnitLayoutReader(new File("/Users/altair823/IdeaProjects/UnorganizedMachine/layout/TuringExample.ulf")));
+
+        // Print initial states.
+        Unit.getUnitMap().forEach((id, unit)-> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
+        System.out.println();
+
+        // Repeat.
+        for (int i = 0; i < 10; i++) {
+
+            // Make a pulse.
+            control.makePulse();
+
+            // Print result states.
+            Unit.getUnitMap().forEach((id, unit) -> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
+            System.out.println();
+
+            Edge.getEdgeMap().get(((long)(Math.random()*10)%9)).reverseDeliverRule();
         }
     }
 }

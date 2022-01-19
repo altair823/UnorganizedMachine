@@ -1,6 +1,6 @@
 package unorganized.machine.mapper;
 
-import unorganized.machine.handler.ATypeHander;
+import unorganized.machine.calculator.ATypeCalculator;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +20,7 @@ public class ATypeMapper implements DataMapper{
         else {
             dataMap.put("state", true);
         }
-        dataMap.put("stateHandler", new ATypeHander());
+        dataMap.put("stateHandler", new ATypeCalculator());
         return dataMap;
     }
 }

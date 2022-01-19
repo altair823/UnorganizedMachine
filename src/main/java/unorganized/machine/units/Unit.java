@@ -1,9 +1,10 @@
 package unorganized.machine.units;
 
-import unorganized.machine.handler.StateHandler;
+import unorganized.machine.calculator.StateCalculator;
 import unorganized.machine.edges.Edge;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public class Unit {
     /**
      * Calculator for current unit state.
      */
-    private final StateHandler stateHandler;
+    private final StateCalculator stateHandler;
 
     /**
      * Constructor that create a new Unit object.
@@ -55,7 +56,7 @@ public class Unit {
      * @param state initial unit state
      * @param stateHandler State calculator object
      */
-    Unit(long id, boolean state, StateHandler stateHandler) {
+    Unit(long id, boolean state, StateCalculator stateHandler) {
         this.id = id;
         this.currentState = state;
         this.stateHandler = stateHandler;
@@ -96,12 +97,12 @@ public class Unit {
      * Add collection of state from previous units.
      * @param states collection of states
      */
-    public void addPreviousStates(List<Boolean> states){
+    public void addPreviousStates(boolean states){
         if (this.previousStates != null) {
-            this.previousStates.addAll(states);
+            this.previousStates.add(states);
         }
         else {
-            this.previousStates = states;
+            this.previousStates = new LinkedList<>(List.of(states));
         }
     }
 
@@ -128,7 +129,7 @@ public class Unit {
 
         private long id;
         private boolean state;
-        private StateHandler stateHandler;
+        private StateCalculator stateHandler;
 
         /**
          * Constructor for Unit builder without unit ID.
@@ -167,7 +168,7 @@ public class Unit {
          * @param stateHandler state calculator
          * @return UnitBuilder instance
          */
-        public UnitBuilder setStateHandler(StateHandler stateHandler){
+        public UnitBuilder setStateHandler(StateCalculator stateHandler){
             this.stateHandler = stateHandler;
             return this;
         }

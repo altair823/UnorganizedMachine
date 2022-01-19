@@ -1,14 +1,13 @@
-package unorganized.machine.handler;
+package unorganized.machine.calculator;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * State calculator for unorganized machine units.
  * Generally used in type A units described in Turing's paper(Intelligent Machinery, 1948).
  */
-public class ATypeHander implements StateHandler {
+public class ATypeCalculator implements StateCalculator {
     @Override
     public boolean calculate(Collection<Boolean> states) {
         if (states instanceof List<Boolean> stateList) {
@@ -18,10 +17,5 @@ public class ATypeHander implements StateHandler {
         else {
             throw new ClassCastException();
         }
-    }
-
-    @Override
-    public List<Boolean> deliver(boolean state) {
-        return new LinkedList<>(List.of(state));
     }
 }
