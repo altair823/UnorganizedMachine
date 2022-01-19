@@ -1,4 +1,4 @@
-package unorganized.machine.calculator;
+package unorganized.machine.handler;
 
 import org.junit.jupiter.api.Test;
 
@@ -6,7 +6,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class NandCalculatorTest {
+class ATypeHandlerTest {
 
     @Test
     void calculateTest() {

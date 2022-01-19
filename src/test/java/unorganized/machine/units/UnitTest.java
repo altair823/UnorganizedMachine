@@ -1,10 +1,9 @@
 package unorganized.machine.units;
 
 import org.junit.jupiter.api.Test;
-import unorganized.machine.calculator.StateHandler;
+import unorganized.machine.handler.StateHandler;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 

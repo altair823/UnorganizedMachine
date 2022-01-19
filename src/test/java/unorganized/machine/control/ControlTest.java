@@ -51,11 +51,20 @@ class ControlTest {
 
     @Test
     void makePulseTest() throws FileSystemException, FileNotFoundException {
+        // Read data.
         control.readLayout(new UnitLayoutReader(new File("/Users/altair823/IdeaProjects/UnorganizedMachine/layout/TuringExample.ulf")));
+
+        // Print initial states.
         Unit.getUnitMap().forEach((id, unit)-> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
         System.out.println();
+
+        // Repeat.
         for (int i = 0; i < 10; i++) {
+
+            // Make a pulse.
             control.makePulse();
+
+            // Print result states.
             Unit.getUnitMap().forEach((id, unit) -> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
             System.out.println();
         }

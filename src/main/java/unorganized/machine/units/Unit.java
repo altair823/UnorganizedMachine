@@ -1,9 +1,8 @@
 package unorganized.machine.units;
 
-import unorganized.machine.calculator.StateHandler;
+import unorganized.machine.handler.StateHandler;
 import unorganized.machine.edges.Edge;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package unorganized.machine.reader;
 
-import unorganized.machine.calculator.StateHandler;
+import unorganized.machine.handler.StateHandler;
 import unorganized.machine.edges.Edge;
 import unorganized.machine.mapper.DataMapper;
 import unorganized.machine.units.Unit;
