@@ -26,8 +26,18 @@ public class UnitLayoutReader {
 
     /**
      * Data containing layout for unit of machine read from file.
+     * An element of this list includes the details of particular unit and its edges.
      */
-    private final List<Map<String, Object>> machineData = new LinkedList<>();
+    private final List<Map<String, Object>> lineData = new LinkedList<>();
+
+    /**
+     * Map containing units of current machine.
+     * The key is not the unit ID, but the sequence number of unit which on the current machine.
+     */
+    private final List<Unit> currentUnitList = new ArrayList<>();
+
+    private final Map<Long, Unit> unitMap = new HashMap<>();
+    private final Map<Long, Edge> edgeMap = new HashMap<>();
 
     /**
      * Constructor that create scanner for reading unit layout file.
@@ -61,10 +71,10 @@ public class UnitLayoutReader {
 
     /**
      * Getter for machine data read from file.
-     * @return machine data
+     * @return line data
      */
-    List<Map<String, Object>> getMachineData() {
-        return machineData;
+    List<Map<String, Object>> getLineData() {
+        return lineData;
     }
 
     /**
@@ -74,8 +84,8 @@ public class UnitLayoutReader {
     public void mapAllLine(Map<String, DataMapper> dataMapper){
         while (this.scanner.hasNext()) {
             List<String> line = this.readALine();
-            Map<String, Object> lineDataMap = dataMapper.get(line.get(0)).map(line);
-            this.machineData.add(lineDataMap);
+            Map<String, Object> unitDataMap = dataMapper.get(line.get(0)).map(line);
+            this.lineData.add(unitDataMap);
         }
     }
 
@@ -83,12 +93,28 @@ public class UnitLayoutReader {
      * Method creating all unit instances and allocate it to unitMap.
      */
     void createAllUnits(){
-        for (Map<String, Object> dataMap : this.machineData){
-            new Unit.UnitBuilder()
-                    .setId((Long) dataMap.get("id"))
-                    .setState((Boolean) dataMap.get("state"))
-                    .setStateHandler((StateCalculator) dataMap.get("stateHandler"))
-                    .build();
+        long id = 1;
+        for (Map<String, Object> dataMap : this.lineData){
+            Unit newUnit;
+            if (dataMap.containsKey("id")) {
+                newUnit = new Unit.UnitBuilder()
+                        .setId((long) dataMap.get("id"))
+                        .setState((boolean) dataMap.get("state"))
+                        .setStateHandler((StateCalculator) dataMap.get("stateHandler"))
+                        .build();
+            }
+            else {
+                if (this.unitMap.containsKey(id)){
+                    id++;
+                }
+                newUnit = new Unit.UnitBuilder()
+                        .setId(id)
+                        .setState((boolean) dataMap.get("state"))
+                        .setStateHandler((StateCalculator) dataMap.get("stateHandler"))
+                        .build();
+            }
+            currentUnitList.add(newUnit);
+            this.unitMap.put(newUnit.getId(), newUnit);
         }
     }
 
@@ -96,19 +122,27 @@ public class UnitLayoutReader {
      * Method creating all edge instances and allocate it to edgeMap.
      */
     void createAllEdges(){
-        this.machineData.forEach(unitDataMap -> {
-            if (unitDataMap.get("previousUnitId") instanceof List<?> previousUnitId) {
-                previousUnitId.forEach(obj -> {
+        long id = 1;
+        for (Map<String, Object> unitData : this.lineData) {
+            if (unitData.get("previousUnitId") instanceof List<?> previousUnitIds) {
+                for (Object obj : previousUnitIds) {
                     if (obj instanceof Long previousId) {
-                        new Edge.EdgeBuilder()
-                                .setTailUnit(Unit.getUnitMap().get(previousId))
-                                .setHeadUnit(Unit.getUnitMap().get((Long) unitDataMap.get("id")))
-                                .setStateDeliver(new StateDeliver())
-                                .build();
+                        if (previousId != 0) {
+                            if (this.edgeMap.containsKey(id)) {
+                                id++;
+                            }
+                            Edge newEdge = new Edge.EdgeBuilder()
+                                    .setId(id)
+                                    .setTailUnit(this.currentUnitList.get(Integer.parseInt(String.valueOf(previousId - 1))))
+                                    .setHeadUnit(this.currentUnitList.get(lineData.indexOf(unitData)))
+                                    .setStateDeliver(new StateDeliver())
+                                    .build();
+                            this.edgeMap.put(newEdge.getId(), newEdge);
+                        }
                     }
-                });
+                }
             }
-        });
+        }
     }
 
     /**
@@ -119,5 +153,21 @@ public class UnitLayoutReader {
     public void createAllUnitsAndEdges(){
         this.createAllUnits();
         this.createAllEdges();
+    }
+
+    /**
+     * Getter for current Unit map.
+     * @return current unit map
+     */
+    public Map<Long, Unit> getUnitMap() {
+        return unitMap;
+    }
+
+    /**
+     * Getter for current Edge map.
+     * @return current edge map
+     */
+    public Map<Long, Edge> getEdgeMap() {
+        return edgeMap;
     }
 }

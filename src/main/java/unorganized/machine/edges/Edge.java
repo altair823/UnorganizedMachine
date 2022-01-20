@@ -24,16 +24,6 @@ public class Edge {
     private final long id;
 
     /**
-     * ID that allocated to the latest edge.
-     */
-    private static long latestId = 0;
-
-    /**
-     * Map that contains all edge data.
-     */
-    private static final Map<Long, Edge> edgeMap = new HashMap<>();
-
-    /**
      * Unit that provides state.
      */
     private final Unit tailUnit;
@@ -58,7 +48,6 @@ public class Edge {
         this.tailUnit = tailUnit;
         this.headUnit = headUnit;
         this.stateDeliver = stateDeliver;
-        edgeMap.put(this.id, this);
     }
 
     /**
@@ -81,7 +70,9 @@ public class Edge {
      * Deliver the state of previous(tail) unit to next(head) unit.
      */
     public void deliverState(){
-        this.headUnit.addPreviousStates(this.stateDeliver.deliver(tailUnit.getCurrentState()));
+        if (this.tailUnit != null) {
+            this.headUnit.addPreviousStates(this.stateDeliver.deliver(tailUnit.getCurrentState()));
+        }
     }
 
     /**
@@ -91,19 +82,20 @@ public class Edge {
         this.stateDeliver.reverse();
     }
 
-    /**
-     * Getter for static Map edgeMap.
-     * @return Map that contains all edge data
-     */
-    public static Map<Long, Edge> getEdgeMap(){
-        return edgeMap;
-    }
 
     @Override
     public String toString(){
+        long tailUnitId = -1;
+        if (this.tailUnit != null) {
+            tailUnitId = this.tailUnit.getId();
+        }
+        long headUnitId = -1;
+        if (this.headUnit != null){
+            headUnitId = this.headUnit.getId();
+        }
         return "Edge ID: " + this.id + "\n"
-                + "tailUnitId: " + this.tailUnit.getId() + "\n"
-                + "headUnitId: " + this.headUnit.getId() + "\n";
+                + "tailUnitId: " + tailUnitId + "\n"
+                + "headUnitId: " + headUnitId + "\n";
     }
 
     /**
@@ -114,18 +106,6 @@ public class Edge {
         private Unit tailUnit;
         private Unit headUnit;
         private StateDeliver stateDeliver;
-
-        /**
-         * Constructor for EdgeBuilder.
-         */
-        public EdgeBuilder(){
-            long newId = latestId;
-            while (edgeMap.containsKey(newId)){
-                ++newId;
-            }
-            this.id = newId;
-            latestId = this.id;
-        }
 
         /**
          * Setter for edge ID.

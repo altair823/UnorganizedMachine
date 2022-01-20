@@ -21,16 +21,6 @@ import java.util.Map;
 public class Unit {
 
     /**
-     * Table that stores all existing units with their IDs.
-     */
-    private static final Map<Long, Unit> unitMap = new HashMap<>();
-
-    /**
-     * ID of unit object that was created latest.
-     */
-    private static long latestUnitId = -1;
-
-    /**
      * Unit ID that distinguishes it from other units.
      */
     protected long id;
@@ -60,20 +50,15 @@ public class Unit {
         this.id = id;
         this.currentState = state;
         this.stateHandler = stateHandler;
-        // Registering new Unit
-        unitMap.put(this.id, this);
     }
 
     /**
      * The function that receives a pulse from the control and updates the current state.
      */
     public void calculateState(){
-        if (stateHandler != null) {
+        if (stateHandler != null && this.previousStates != null) {
             this.currentState = stateHandler.calculate(previousStates);
             this.previousStates = null;
-        }
-        else {
-            throw new NullPointerException("There is no existing state calculator!");
         }
     }
 
@@ -106,14 +91,6 @@ public class Unit {
         }
     }
 
-    /**
-     * Getter for unitTable.
-     * @return Map that contains all unit data
-     */
-    public static Map<Long, Unit> getUnitMap(){
-        return unitMap;
-    }
-
     @Override
     public String toString(){
         return "Unit ID: " + this.id + "\n"
@@ -130,18 +107,6 @@ public class Unit {
         private long id;
         private boolean state;
         private StateCalculator stateHandler;
-
-        /**
-         * Constructor for Unit builder without unit ID.
-         */
-        public UnitBuilder(){
-            long newId = latestUnitId;
-            while (unitMap.containsKey(newId)){
-                newId--;
-            }
-            this.id = newId;
-            latestUnitId = this.id;
-        }
 
         /**
          * Setter for unit ID.

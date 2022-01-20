@@ -1,6 +1,6 @@
 UnitLayoutDataFile
-A 1 3 2 1
-A 2 3 5 1
-A 3 4 5 0
-A 4 3 4 0
-A 5 2 5 1
+A 3 2 1
+A 3 5 1
+A 4 5 0
+A 3 4 0
+A 2 5 1

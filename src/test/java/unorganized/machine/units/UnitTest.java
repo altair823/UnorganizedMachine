@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UnitTest {
 
-    private final Unit.UnitBuilder unitBuilder;
     private final StateCalculator stateHandler;
 
     public UnitTest(){
@@ -22,20 +21,24 @@ class UnitTest {
                 throw new ClassCastException();
             }
         };
-        this.unitBuilder = new Unit.UnitBuilder();
     }
 
     @Test
     void unitBuilderTest() {
-        Unit unit = this.unitBuilder.setId(0).setState(true).build();
+        Unit unit1 = new Unit.UnitBuilder().setId(0).setState(true).build();
         // Unit verification
-        assertEquals(0, unit.getId());
-        assertTrue(unit.getCurrentState());
+        assertEquals(0, unit1.getId());
+        assertTrue(unit1.getCurrentState());
+
+        Unit unit2 = new Unit.UnitBuilder().setState(true).build();
+        // Unit verification
+        assertEquals(1, unit2.getId());
+        assertTrue(unit2.getCurrentState());
     }
 
     @Test
     void inputPulseTest() {
-        Unit unit = this.unitBuilder.setId(0).setState(true).setStateHandler(this.stateHandler).build();
+        Unit unit = new Unit.UnitBuilder().setId(0).setState(true).setStateHandler(this.stateHandler).build();
         // Pulse test
         unit.addPreviousStates(true);
         unit.addPreviousStates(true);
