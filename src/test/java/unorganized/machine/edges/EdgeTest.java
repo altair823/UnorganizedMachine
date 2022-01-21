@@ -25,8 +25,8 @@ class EdgeTest {
                 throw new ClassCastException();
             }
         };
-        units.add(new Unit.UnitBuilder().setState(true).setStateHandler(stateHandler).build());
-        units.add(new Unit.UnitBuilder().setState(true).setStateHandler(stateHandler).build());
+        units.add(new Unit.UnitBuilder().setId(1).setState(true).setStateHandler(stateHandler).build());
+        units.add(new Unit.UnitBuilder().setId(2).setState(true).setStateHandler(stateHandler).build());
     }
 
     @Test
@@ -64,5 +64,24 @@ class EdgeTest {
         // check head unit's previous state list.
         this.units.get(1).calculateState();
         assertFalse(this.units.get(1).getCurrentState());
+    }
+
+    @Test
+    void copyTest() {
+        // make original
+        Edge edge1 = new Edge.EdgeBuilder()
+                .setId(0)
+                .setTailUnit(units.get(0))
+                .setHeadUnit(units.get(1))
+                .setStateDeliver(new StateDeliver())
+                .build();
+        System.out.println(edge1);
+
+        // copy!
+        Edge edge2 = Edge.copy(edge1);
+        System.out.println(edge2);
+
+        // compare!
+        assertNotSame(edge1, edge2);
     }
 }

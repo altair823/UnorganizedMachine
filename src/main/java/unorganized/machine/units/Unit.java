@@ -3,10 +3,8 @@ package unorganized.machine.units;
 import unorganized.machine.calculator.StateCalculator;
 import unorganized.machine.edges.Edge;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -38,26 +36,26 @@ public class Unit {
     /**
      * Calculator for current unit state.
      */
-    private final StateCalculator stateHandler;
+    private final StateCalculator stateCalculator;
 
     /**
      * Constructor that create a new Unit object.
      * @param id unit ID
      * @param state initial unit state
-     * @param stateHandler State calculator object
+     * @param stateCalculator State calculator object
      */
-    Unit(long id, boolean state, StateCalculator stateHandler) {
+    Unit(long id, boolean state, StateCalculator stateCalculator) {
         this.id = id;
         this.currentState = state;
-        this.stateHandler = stateHandler;
+        this.stateCalculator = stateCalculator;
     }
 
     /**
      * The function that receives a pulse from the control and updates the current state.
      */
     public void calculateState(){
-        if (stateHandler != null && this.previousStates != null) {
-            this.currentState = stateHandler.calculate(previousStates);
+        if (stateCalculator != null && this.previousStates != null) {
+            this.currentState = stateCalculator.calculate(previousStates);
             this.previousStates = null;
         }
     }
@@ -95,7 +93,20 @@ public class Unit {
     public String toString(){
         return "Unit ID: " + this.id + "\n"
                 + "state: " + this.currentState + "\n"
-                + "state calculator: " + this.stateHandler.getClass().getSimpleName() + "\n";
+                + "state calculator: " + this.stateCalculator.getClass().getSimpleName() + "\n";
+    }
+
+    /**
+     * Copy factory method that copy the original unit object deeply.
+     * @param originalUnit original unit object
+     * @return new copied unit object
+     */
+    public static Unit copy(Unit originalUnit){
+        return new Unit.UnitBuilder()
+                .setId(originalUnit.getId())
+                .setState(originalUnit.getCurrentState())
+                .setStateHandler(originalUnit.stateCalculator)
+                .build();
     }
 
     /**

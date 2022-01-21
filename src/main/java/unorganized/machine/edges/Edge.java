@@ -82,6 +82,13 @@ public class Edge {
         this.stateDeliver.reverse();
     }
 
+    /**
+     * Getter for state deliver.
+     * @return state deliver
+     */
+    public StateDeliver getStateDeliver(){
+        return this.stateDeliver;
+    }
 
     @Override
     public String toString(){
@@ -95,7 +102,22 @@ public class Edge {
         }
         return "Edge ID: " + this.id + "\n"
                 + "tailUnitId: " + tailUnitId + "\n"
-                + "headUnitId: " + headUnitId + "\n";
+                + "headUnitId: " + headUnitId + "\n"
+                + "state flip: " + this.stateDeliver.getDeliverWay() + "\n";
+    }
+
+    /**
+     * Copy factory method that copy the original edge object deeply.
+     * @param originalEdge original edge object
+     * @return new copied edge object
+     */
+    public static Edge copy(Edge originalEdge){
+        return new EdgeBuilder()
+                .setId(originalEdge.getId())
+                .setTailUnit(originalEdge.getTailUnit())
+                .setHeadUnit(originalEdge.getHeadUnit())
+                .setStateDeliver(StateDeliver.copy(originalEdge.stateDeliver))
+                .build();
     }
 
     /**

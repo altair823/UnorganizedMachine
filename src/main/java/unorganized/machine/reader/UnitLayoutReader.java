@@ -36,9 +36,6 @@ public class UnitLayoutReader {
      */
     private final List<Unit> currentUnitList = new ArrayList<>();
 
-    private final Map<Long, Unit> unitMap = new HashMap<>();
-    private final Map<Long, Edge> edgeMap = new HashMap<>();
-
     /**
      * Constructor that create scanner for reading unit layout file.
      * @param layoutFile File object contains unit layout file
@@ -91,8 +88,10 @@ public class UnitLayoutReader {
 
     /**
      * Method creating all unit instances and allocate it to unitMap.
+     * @return Map containing data of all units.
      */
-    void createAllUnits(){
+    public Map<Long, Unit> createAllUnits(){
+        Map<Long, Unit> unitMap = new HashMap<>();
         long id = 1;
         for (Map<String, Object> dataMap : this.lineData){
             Unit newUnit;
@@ -104,7 +103,7 @@ public class UnitLayoutReader {
                         .build();
             }
             else {
-                if (this.unitMap.containsKey(id)){
+                if (unitMap.containsKey(id)){
                     id++;
                 }
                 newUnit = new Unit.UnitBuilder()
@@ -114,21 +113,26 @@ public class UnitLayoutReader {
                         .build();
             }
             currentUnitList.add(newUnit);
-            this.unitMap.put(newUnit.getId(), newUnit);
+            unitMap.put(newUnit.getId(), newUnit);
         }
+        return unitMap;
     }
 
     /**
      * Method creating all edge instances and allocate it to edgeMap.
      */
-    void createAllEdges(){
+    public Map<Long, Edge> createAllEdges(){
+        if (this.currentUnitList.isEmpty()){
+            throw new NoSuchElementException();
+        }
+        Map<Long, Edge> edgeMap = new HashMap<>();
         long id = 1;
         for (Map<String, Object> unitData : this.lineData) {
             if (unitData.get("previousUnitId") instanceof List<?> previousUnitIds) {
                 for (Object obj : previousUnitIds) {
                     if (obj instanceof Long previousId) {
                         if (previousId != 0) {
-                            if (this.edgeMap.containsKey(id)) {
+                            if (edgeMap.containsKey(id)) {
                                 id++;
                             }
                             Edge newEdge = new Edge.EdgeBuilder()
@@ -137,37 +141,12 @@ public class UnitLayoutReader {
                                     .setHeadUnit(this.currentUnitList.get(lineData.indexOf(unitData)))
                                     .setStateDeliver(new StateDeliver())
                                     .build();
-                            this.edgeMap.put(newEdge.getId(), newEdge);
+                            edgeMap.put(newEdge.getId(), newEdge);
                         }
                     }
                 }
             }
         }
-    }
-
-    /**
-     * Method creating all units and edges.
-     * To create units and edges in the right order,
-     * need to use this method instead other method.
-     */
-    public void createAllUnitsAndEdges(){
-        this.createAllUnits();
-        this.createAllEdges();
-    }
-
-    /**
-     * Getter for current Unit map.
-     * @return current unit map
-     */
-    public Map<Long, Unit> getUnitMap() {
-        return unitMap;
-    }
-
-    /**
-     * Getter for current Edge map.
-     * @return current edge map
-     */
-    public Map<Long, Edge> getEdgeMap() {
         return edgeMap;
     }
 }

@@ -31,7 +31,7 @@ class ControlTest {
         //Edge.getEdgeMap().forEach((id, edge)-> System.out.println(edge));
 
         // test the base example in paper.
-        this.unitLayoutReader.getEdgeMap().forEach((id, edge)->{
+        this.control.getEdgeMap().forEach((id, edge)->{
             if (edge.getHeadUnit().getId() == 1L){
                 assert edge.getTailUnit().getId() == 3L || edge.getTailUnit().getId() == 2L;
             } else if (edge.getHeadUnit().getId() == 2L) {
@@ -54,7 +54,7 @@ class ControlTest {
         control.readLayout(this.unitLayoutReader);
 
         // Print initial states.
-        this.unitLayoutReader.getUnitMap().forEach((id, unit)-> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
+        this.control.getUnitMap().forEach((id, unit)-> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
         System.out.println();
 
         // Repeat.
@@ -64,7 +64,7 @@ class ControlTest {
             control.makePulse();
 
             // Print result states.
-            this.unitLayoutReader.getUnitMap().forEach((id, unit) -> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
+            this.control.getUnitMap().forEach((id, unit) -> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
             System.out.println();
         }
     }
@@ -157,5 +157,59 @@ class ControlTest {
             }
             System.out.println();
         }
+    }
+
+    @Test
+    void copy() throws FileSystemException, FileNotFoundException {
+        // create original
+        Control control1 = new Control();
+        control1.addMapper("A", new ATypeMapper());
+        control1.readLayout(new UnitLayoutReader(new File("/Users/altair823/IdeaProjects/UnorganizedMachine/layout/machine1.ulf")));
+
+        // copy!
+        Control control2 = Control.copy(control1);
+
+        // compare objectively difference
+        assertNotSame(control1, control2);
+
+        control1.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        System.out.println();
+        control2.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        System.out.println();
+
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+        control1.reverseSingleEdge();
+
+        control1.makePulse();
+        control2.makePulse();
+        control1.makePulse();
+        control2.makePulse();
+        control1.makePulse();
+        control2.makePulse();
+
+        // compare result!
+        control1.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        System.out.println();
+        control2.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        System.out.println();
+
+        // compare edges!
+        control1.getEdgeMap().forEach((id, edge)->System.out.println(edge));
+        control2.getEdgeMap().forEach((id, edge)->System.out.println(edge));
     }
 }

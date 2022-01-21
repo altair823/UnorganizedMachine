@@ -1,6 +1,7 @@
 package unorganized.machine.units;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestReporter;
 import unorganized.machine.calculator.StateCalculator;
 
 import java.util.Collection;
@@ -44,5 +45,23 @@ class UnitTest {
         unit.addPreviousStates(true);
         unit.calculateState();
         assertFalse(unit.getCurrentState());
+    }
+
+    @Test
+    void copyTest() {
+        // create original
+        Unit unit1 = new Unit.UnitBuilder()
+                .setId(0)
+                .setState(true)
+                .setStateHandler(this.stateHandler)
+                .build();
+        System.out.println(unit1);
+
+        // copy!
+        Unit unit2 = Unit.copy(unit1);
+        System.out.println(unit2);
+
+        // compare
+        assertNotSame(unit1, unit2);
     }
 }

@@ -34,4 +34,23 @@ public class StateDeliver {
     public void reverse(){
         this.deliverWay = !this.deliverWay;
     }
+
+    /**
+     * Copy method that copy state deliver deeply.
+     * @param originalStateDeliver original state deliver
+     * @return new state deliver
+     */
+    public static StateDeliver copy(StateDeliver originalStateDeliver){
+        StateDeliver stateDeliver = new StateDeliver();
+        stateDeliver.deliverWay = originalStateDeliver.deliverWay;
+        return stateDeliver;
+    }
+
+    /**
+     * Getter for boolean value Whether to reverse the state.
+     * @return whether to reverse the state
+     */
+    public boolean getDeliverWay(){
+        return this.deliverWay;
+    }
 }

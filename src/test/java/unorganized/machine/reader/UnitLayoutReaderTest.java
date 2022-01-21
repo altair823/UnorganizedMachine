@@ -54,8 +54,8 @@ class UnitLayoutReaderTest {
         Map<String, DataMapper> dataMapperMap = new HashMap<>();
         dataMapperMap.put("A", new ATypeMapper());
         this.unitLayoutReader.mapAllLine(dataMapperMap);
-        this.unitLayoutReader.createAllUnits();
-        this.unitLayoutReader.getUnitMap().forEach((id, unit)-> System.out.println(unit));
+        Map<Long, Unit> unitMap = this.unitLayoutReader.createAllUnits();
+        unitMap.forEach((id, unit)-> System.out.println(unit));
     }
 
     @Test
@@ -64,7 +64,7 @@ class UnitLayoutReaderTest {
         dataMapperMap.put("A", new ATypeMapper());
         this.unitLayoutReader.mapAllLine(dataMapperMap);
         this.unitLayoutReader.createAllUnits();
-        this.unitLayoutReader.createAllEdges();
-        this.unitLayoutReader.getEdgeMap().forEach((id, edge)-> System.out.println(edge));
+        Map<Long, Edge> edgeMap = this.unitLayoutReader.createAllEdges();
+        edgeMap.forEach((id, edge)-> System.out.println(edge));
     }
 }
