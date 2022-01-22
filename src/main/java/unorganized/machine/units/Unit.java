@@ -77,6 +77,14 @@ public class Unit {
     }
 
     /**
+     * Setter for current state.
+     * @param state new current state
+     */
+    public void setCurrentState(boolean state){
+        this.currentState = state;
+    }
+
+    /**
      * Add collection of state from previous units.
      * @param states collection of states
      */

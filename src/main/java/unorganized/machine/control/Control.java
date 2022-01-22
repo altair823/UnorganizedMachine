@@ -6,7 +6,9 @@ import unorganized.machine.mapper.DataMapper;
 import unorganized.machine.reader.UnitLayoutReader;
 import unorganized.machine.units.Unit;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +20,7 @@ public class Control {
     private final Map<String, DataMapper> dataMappers = new HashMap<>();
     private Map<Long, Unit> unitMap;
     private Map<Long, Edge> edgeMap;
+    private final Map<Long, Boolean> initialUnitStates = new HashMap<>();
 
     /**
      * Method to add a new data mapper
@@ -36,14 +39,17 @@ public class Control {
         unitLayoutReader.mapAllLine(this.dataMappers);
         this.unitMap = unitLayoutReader.createAllUnits();
         this.edgeMap = unitLayoutReader.createAllEdges();
+
+        // Save initial unit states.
+        this.unitMap.forEach((id, unit) -> this.initialUnitStates.put(id, unit.getCurrentState()));
     }
 
     /**
      * Method that make a pulse to all edges and units.
      */
     public void makePulse(){
-        this.edgeMap.forEach((id, edge)-> edge.deliverState());
-        this.unitMap.forEach((id, unit)-> unit.calculateState());
+        this.edgeMap.forEach((id, edge) -> edge.deliverState());
+        this.unitMap.forEach((id, unit) -> unit.calculateState());
     }
 
     /**
@@ -52,6 +58,13 @@ public class Control {
      */
     public void reverseSingleEdge(){
         this.edgeMap.get(((long) (Math.random() * 100000) % this.edgeMap.size() + 1)).reverseDeliverRule();
+    }
+
+    /**
+     * Method that initializes all units with initial unit states.
+     */
+    public void initUnitStates(){
+        this.initialUnitStates.forEach((id, state) -> this.unitMap.get(id).setCurrentState(state));
     }
 
     /**

@@ -212,4 +212,34 @@ class ControlTest {
         control1.getEdgeMap().forEach((id, edge)->System.out.println(edge));
         control2.getEdgeMap().forEach((id, edge)->System.out.println(edge));
     }
+
+    @Test
+    void initUnitStates() throws FileSystemException, FileNotFoundException {
+        // create control.
+        this.control.readLayout(new UnitLayoutReader(new File("/Users/altair823/IdeaProjects/UnorganizedMachine/layout/machine1.ulf")));
+
+        // print initial states list.
+        control.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        System.out.println();
+
+        // execute.
+        this.control.reverseSingleEdge();
+        this.control.reverseSingleEdge();
+        this.control.reverseSingleEdge();
+        this.control.reverseSingleEdge();
+        this.control.reverseSingleEdge();
+        this.control.reverseSingleEdge();
+        this.control.makePulse();
+
+        // print current states list.
+        control.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        System.out.println();
+
+        // initialize.
+        this.control.initUnitStates();
+
+        // print initialized states list.
+        control.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        System.out.println();
+    }
 }
