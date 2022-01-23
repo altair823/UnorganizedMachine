@@ -14,9 +14,6 @@ import java.util.Map;
  */
 public class Edge {
 
-    public long getId() {
-        return id;
-    }
 
     /**
      * Edge ID.
@@ -40,8 +37,10 @@ public class Edge {
 
     /**
      * Constructor for edge instance.
+     * @param id ID of new Edge
      * @param tailUnit tail unit
      * @param headUnit head unit
+     * @param stateDeliver StateDeliver instance
      */
     public Edge(long id, Unit tailUnit, Unit headUnit, StateDeliver stateDeliver){
         this.id = id;
@@ -64,6 +63,14 @@ public class Edge {
      */
     public Unit getHeadUnit() {
         return headUnit;
+    }
+
+    /**
+     * Getter for ID of the edge.
+     * @return ID of the edge
+     */
+    public long getId() {
+        return id;
     }
 
     /**

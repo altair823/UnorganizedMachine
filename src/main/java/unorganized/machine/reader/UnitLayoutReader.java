@@ -120,6 +120,7 @@ public class UnitLayoutReader {
 
     /**
      * Method creating all edge instances and allocate it to edgeMap.
+     * @return Map of Edge instances
      */
     public Map<Long, Edge> createAllEdges(){
         if (this.currentUnitList.isEmpty()){

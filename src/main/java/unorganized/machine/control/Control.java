@@ -6,9 +6,7 @@ import unorganized.machine.mapper.DataMapper;
 import unorganized.machine.reader.UnitLayoutReader;
 import unorganized.machine.units.Unit;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

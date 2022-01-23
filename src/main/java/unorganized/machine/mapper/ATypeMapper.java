@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Type A Mapper class that implement DataMapper interface.
+ */
 public class ATypeMapper implements DataMapper{
 
     @Override
