@@ -25,16 +25,16 @@ class EdgeTest {
                 throw new ClassCastException();
             }
         };
-        units.add(new Unit.UnitBuilder().setId(1).setState(true).setStateHandler(stateHandler).build());
-        units.add(new Unit.UnitBuilder().setId(2).setState(true).setStateHandler(stateHandler).build());
+        units.add(Unit.builder().id(1).currentState(true).stateCalculator(stateHandler).build());
+        units.add(Unit.builder().id(2).currentState(true).stateCalculator(stateHandler).build());
     }
 
     @Test
     void edgeConnectTest(){
-        this.edges.add(new Edge.EdgeBuilder()
-                .setTailUnit(units.get(0))
-                .setHeadUnit(units.get(1))
-                .setStateDeliver(new StateDeliver())
+        this.edges.add(Edge.builder()
+                .tailUnit(units.get(0))
+                .headUnit(units.get(1))
+                .stateDeliver(new StateDeliver())
                 .build());
 
         // check tail and head unit.
@@ -46,15 +46,15 @@ class EdgeTest {
     @Test
     void handOverStateTest(){
         // set two edges between two units.
-        this.edges.add(new Edge.EdgeBuilder()
-                .setTailUnit(units.get(0))
-                .setHeadUnit(units.get(1))
-                .setStateDeliver(this.stateDeliver)
+        this.edges.add(Edge.builder()
+                .tailUnit(units.get(0))
+                .headUnit(units.get(1))
+                .stateDeliver(this.stateDeliver)
                 .build());
-        this.edges.add(new Edge.EdgeBuilder()
-                .setTailUnit(units.get(0))
-                .setHeadUnit(units.get(1))
-                .setStateDeliver(this.stateDeliver)
+        this.edges.add(Edge.builder()
+                .tailUnit(units.get(0))
+                .headUnit(units.get(1))
+                .stateDeliver(this.stateDeliver)
                 .build());
 
 
@@ -63,17 +63,17 @@ class EdgeTest {
 
         // check head unit's previous state list.
         this.units.get(1).calculateState();
-        assertFalse(this.units.get(1).getCurrentState());
+        assertFalse(this.units.get(1).isCurrentState());
     }
 
     @Test
     void copyTest() {
         // make original
-        Edge edge1 = new Edge.EdgeBuilder()
-                .setId(0)
-                .setTailUnit(units.get(0))
-                .setHeadUnit(units.get(1))
-                .setStateDeliver(new StateDeliver())
+        Edge edge1 = Edge.builder()
+                .id(0)
+                .tailUnit(units.get(0))
+                .headUnit(units.get(1))
+                .stateDeliver(new StateDeliver())
                 .build();
         System.out.println(edge1);
 

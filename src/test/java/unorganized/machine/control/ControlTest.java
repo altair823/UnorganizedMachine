@@ -21,7 +21,7 @@ class ControlTest {
 
     ControlTest() throws FileSystemException, FileNotFoundException {
         control.addMapper("A", new ATypeMapper());
-        this.unitLayoutReader = new UnitLayoutReader(new File("/Users/altair823/IdeaProjects/UnorganizedMachine/layout/machine1.ulf"));
+        this.unitLayoutReader = new UnitLayoutReader(new File("/Users/altair823/IdeaProjects/UnorganizedMachine/layout/TuringExample.ulf"));
     }
 
     @Test
@@ -54,7 +54,7 @@ class ControlTest {
         control.readLayout(this.unitLayoutReader);
 
         // Print initial states.
-        this.control.getUnitMap().forEach((id, unit)-> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
+        this.control.getUnitMap().forEach((id, unit)-> System.out.print((unit.isCurrentState() ? 1 : 0) + " "));
         System.out.println();
 
         // Repeat.
@@ -64,7 +64,7 @@ class ControlTest {
             control.makePulse();
 
             // Print result states.
-            this.control.getUnitMap().forEach((id, unit) -> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
+            this.control.getUnitMap().forEach((id, unit) -> System.out.print((unit.isCurrentState() ? 1 : 0) + " "));
             System.out.println();
         }
     }
@@ -77,7 +77,7 @@ class ControlTest {
         control1.readLayout(this.unitLayoutReader);
 
         // Print initial states.
-        control1.getUnitMap().forEach((id, unit)-> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
+        control1.getUnitMap().forEach((id, unit)-> System.out.print((unit.isCurrentState() ? 1 : 0) + " "));
         System.out.println();
 
         // Repeat.
@@ -87,7 +87,7 @@ class ControlTest {
             control1.makePulse();
 
             // Print result states.
-            control1.getUnitMap().forEach((id, unit) -> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
+            control1.getUnitMap().forEach((id, unit) -> System.out.print((unit.isCurrentState() ? 1 : 0) + " "));
             System.out.println();
 
             control1.reverseSingleEdge();
@@ -108,7 +108,7 @@ class ControlTest {
             if (id == 39){
                 System.out.print("  ");
             }
-            System.out.print((unit.getCurrentState() ? 1 : 0) + " ");
+            System.out.print((unit.isCurrentState() ? 1 : 0) + " ");
         });
         System.out.println();
 
@@ -123,7 +123,7 @@ class ControlTest {
                 if (id == 39){
                     System.out.print("  ");
                 }
-                System.out.print((unit.getCurrentState() ? 1 : 0) + " ");
+                System.out.print((unit.isCurrentState() ? 1 : 0) + " ");
             });
             System.out.println();
 
@@ -148,7 +148,7 @@ class ControlTest {
 
         for (Control control: controlList){
             for (int i=0; i<20; i++) {
-                control.getUnitMap().forEach((id, unit) -> System.out.print((unit.getCurrentState() ? 1 : 0) + " "));
+                control.getUnitMap().forEach((id, unit) -> System.out.print((unit.isCurrentState() ? 1 : 0) + " "));
                 System.out.println();
                 control.makePulse();
                 control.reverseSingleEdge();
@@ -172,9 +172,9 @@ class ControlTest {
         // compare objectively difference
         assertNotSame(control1, control2);
 
-        control1.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        control1.getUnitMap().forEach((id, unit) -> System.out.print(unit.isCurrentState() ? "1 " : "0 "));
         System.out.println();
-        control2.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        control2.getUnitMap().forEach((id, unit) -> System.out.print(unit.isCurrentState() ? "1 " : "0 "));
         System.out.println();
 
         control1.reverseSingleEdge();
@@ -203,9 +203,9 @@ class ControlTest {
         control2.makePulse();
 
         // compare result!
-        control1.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        control1.getUnitMap().forEach((id, unit) -> System.out.print(unit.isCurrentState() ? "1 " : "0 "));
         System.out.println();
-        control2.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        control2.getUnitMap().forEach((id, unit) -> System.out.print(unit.isCurrentState() ? "1 " : "0 "));
         System.out.println();
 
         // compare edges!
@@ -219,7 +219,7 @@ class ControlTest {
         this.control.readLayout(new UnitLayoutReader(new File("/Users/altair823/IdeaProjects/UnorganizedMachine/layout/machine1.ulf")));
 
         // print initial states list.
-        control.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        control.getUnitMap().forEach((id, unit) -> System.out.print(unit.isCurrentState() ? "1 " : "0 "));
         System.out.println();
 
         // execute.
@@ -232,14 +232,14 @@ class ControlTest {
         this.control.makePulse();
 
         // print current states list.
-        control.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        control.getUnitMap().forEach((id, unit) -> System.out.print(unit.isCurrentState() ? "1 " : "0 "));
         System.out.println();
 
         // initialize.
         this.control.initUnitStates();
 
         // print initialized states list.
-        control.getUnitMap().forEach((id, unit) -> System.out.print(unit.getCurrentState() ? "1 " : "0 "));
+        control.getUnitMap().forEach((id, unit) -> System.out.print(unit.isCurrentState() ? "1 " : "0 "));
         System.out.println();
     }
 }

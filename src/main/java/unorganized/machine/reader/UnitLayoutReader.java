@@ -96,20 +96,20 @@ public class UnitLayoutReader {
         for (Map<String, Object> dataMap : this.lineData){
             Unit newUnit;
             if (dataMap.containsKey("id")) {
-                newUnit = new Unit.UnitBuilder()
-                        .setId((long) dataMap.get("id"))
-                        .setState((boolean) dataMap.get("state"))
-                        .setStateHandler((StateCalculator) dataMap.get("stateHandler"))
+                newUnit = Unit.builder()
+                        .id((long) dataMap.get("id"))
+                        .currentState((boolean) dataMap.get("state"))
+                        .stateCalculator((StateCalculator) dataMap.get("stateHandler"))
                         .build();
             }
             else {
                 if (unitMap.containsKey(id)){
                     id++;
                 }
-                newUnit = new Unit.UnitBuilder()
-                        .setId(id)
-                        .setState((boolean) dataMap.get("state"))
-                        .setStateHandler((StateCalculator) dataMap.get("stateHandler"))
+                newUnit = Unit.builder()
+                        .id(id)
+                        .currentState((boolean) dataMap.get("state"))
+                        .stateCalculator((StateCalculator) dataMap.get("stateHandler"))
                         .build();
             }
             currentUnitList.add(newUnit);
@@ -136,11 +136,11 @@ public class UnitLayoutReader {
                             if (edgeMap.containsKey(id)) {
                                 id++;
                             }
-                            Edge newEdge = new Edge.EdgeBuilder()
-                                    .setId(id)
-                                    .setTailUnit(this.currentUnitList.get(Integer.parseInt(String.valueOf(previousId - 1))))
-                                    .setHeadUnit(this.currentUnitList.get(lineData.indexOf(unitData)))
-                                    .setStateDeliver(new StateDeliver())
+                            Edge newEdge = Edge.builder()
+                                    .id(id)
+                                    .tailUnit(this.currentUnitList.get(Integer.parseInt(String.valueOf(previousId - 1))))
+                                    .headUnit(this.currentUnitList.get(lineData.indexOf(unitData)))
+                                    .stateDeliver(new StateDeliver())
                                     .build();
                             edgeMap.put(newEdge.getId(), newEdge);
                         }

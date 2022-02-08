@@ -1,5 +1,9 @@
 package unorganized.machine.units;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import unorganized.machine.calculator.StateCalculator;
 import unorganized.machine.edges.Edge;
 
@@ -16,6 +20,9 @@ import java.util.List;
  * @author altair823
  * @see Edge
  */
+@Getter
+@AllArgsConstructor
+@Builder
 public class Unit {
 
     /**
@@ -26,6 +33,7 @@ public class Unit {
     /**
      * Current state of unit. A unit must have only one state.
      */
+    @Setter
     protected boolean currentState;
 
     /**
@@ -39,18 +47,6 @@ public class Unit {
     private final StateCalculator stateCalculator;
 
     /**
-     * Constructor that create a new Unit object.
-     * @param id unit ID
-     * @param state initial unit state
-     * @param stateCalculator State calculator object
-     */
-    Unit(long id, boolean state, StateCalculator stateCalculator) {
-        this.id = id;
-        this.currentState = state;
-        this.stateCalculator = stateCalculator;
-    }
-
-    /**
      * The function that receives a pulse from the control and updates the current state.
      */
     public void calculateState(){
@@ -58,30 +54,6 @@ public class Unit {
             this.currentState = stateCalculator.calculate(previousStates);
             this.previousStates = null;
         }
-    }
-
-    /**
-     * Getter for unit ID.
-     * @return unit ID
-     */
-    public long getId() {
-        return id;
-    }
-
-    /**
-     * Getter current unit state.
-     * @return current unit state
-     */
-    public boolean getCurrentState() {
-        return currentState;
-    }
-
-    /**
-     * Setter for current state.
-     * @param state new current state
-     */
-    public void setCurrentState(boolean state){
-        this.currentState = state;
     }
 
     /**
@@ -110,60 +82,11 @@ public class Unit {
      * @return new copied unit object
      */
     public static Unit copy(Unit originalUnit){
-        return new Unit.UnitBuilder()
-                .setId(originalUnit.getId())
-                .setState(originalUnit.getCurrentState())
-                .setStateHandler(originalUnit.stateCalculator)
+        return Unit.builder()
+                .id(originalUnit.getId())
+                .currentState(originalUnit.isCurrentState())
+                .stateCalculator(originalUnit.stateCalculator)
                 .build();
-    }
-
-    /**
-     * Builder class that create Unit instance.
-     * Unit instance must be created through this builder.
-     */
-    public static class UnitBuilder {
-
-        private long id;
-        private boolean state;
-        private StateCalculator stateHandler;
-
-        /**
-         * Setter for unit ID.
-         * @param id unit ID
-         * @return UnitBuilder instance
-         */
-        public UnitBuilder setId(long id) {
-            this.id = id;
-            return this;
-        }
-
-        /**
-         * Setter for unit state.
-         * @param state unit state
-         * @return UnitBuilder instance
-         */
-        public UnitBuilder setState(boolean state){
-            this.state = state;
-            return this;
-        }
-
-        /**
-         * Setter for state calculator
-         * @param stateHandler state calculator
-         * @return UnitBuilder instance
-         */
-        public UnitBuilder setStateHandler(StateCalculator stateHandler){
-            this.stateHandler = stateHandler;
-            return this;
-        }
-
-        /**
-         * Build method that made new Unit instance.
-         * @return new Unit instance
-         */
-        public Unit build(){
-            return new Unit(this.id, this.state, this.stateHandler);
-        }
     }
 }
 

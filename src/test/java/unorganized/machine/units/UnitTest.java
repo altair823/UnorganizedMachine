@@ -26,34 +26,34 @@ class UnitTest {
 
     @Test
     void unitBuilderTest() {
-        Unit unit1 = new Unit.UnitBuilder().setId(0).setState(true).build();
+        Unit unit1 = Unit.builder().id(0).currentState(true).build();
         // Unit verification
         assertEquals(0, unit1.getId());
-        assertTrue(unit1.getCurrentState());
+        assertTrue(unit1.isCurrentState());
 
-        Unit unit2 = new Unit.UnitBuilder().setState(true).build();
+        Unit unit2 = Unit.builder().currentState(true).build();
         // Unit verification
-        assertEquals(1, unit2.getId());
-        assertTrue(unit2.getCurrentState());
+        assertEquals(0, unit2.getId());
+        assertTrue(unit2.isCurrentState());
     }
 
     @Test
     void inputPulseTest() {
-        Unit unit = new Unit.UnitBuilder().setId(0).setState(true).setStateHandler(this.stateHandler).build();
+        Unit unit = Unit.builder().id(0).currentState(true).stateCalculator(this.stateHandler).build();
         // Pulse test
         unit.addPreviousStates(true);
         unit.addPreviousStates(true);
         unit.calculateState();
-        assertFalse(unit.getCurrentState());
+        assertFalse(unit.isCurrentState());
     }
 
     @Test
     void copyTest() {
         // create original
-        Unit unit1 = new Unit.UnitBuilder()
-                .setId(0)
-                .setState(true)
-                .setStateHandler(this.stateHandler)
+        Unit unit1 = Unit.builder()
+                .id(0)
+                .currentState(true)
+                .stateCalculator(this.stateHandler)
                 .build();
         System.out.println(unit1);
 

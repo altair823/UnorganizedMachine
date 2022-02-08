@@ -1,5 +1,7 @@
 package unorganized.machine.control;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import unorganized.machine.deliver.StateDeliver;
 import unorganized.machine.edges.Edge;
 import unorganized.machine.mapper.DataMapper;
@@ -13,6 +15,8 @@ import java.util.Map;
  * Class that implements the control described in Turing's paper.
  * This Class controls all edges and units in way of using some interface methods.
  */
+@Getter
+@NoArgsConstructor
 public class Control {
 
     private final Map<String, DataMapper> dataMappers = new HashMap<>();
@@ -39,7 +43,7 @@ public class Control {
         this.edgeMap = unitLayoutReader.createAllEdges();
 
         // Save initial unit states.
-        this.unitMap.forEach((id, unit) -> this.initialUnitStates.put(id, unit.getCurrentState()));
+        this.unitMap.forEach((id, unit) -> this.initialUnitStates.put(id, unit.isCurrentState()));
     }
 
     /**
@@ -66,30 +70,6 @@ public class Control {
     }
 
     /**
-     * Getter for total unit map.
-     * @return unit map
-     */
-    public Map<Long, Unit> getUnitMap(){
-        return this.unitMap;
-    }
-
-    /**
-     * Getter for total edge map.
-     * @return edge map
-     */
-    public Map<Long, Edge> getEdgeMap(){
-        return this.edgeMap;
-    }
-
-    /**
-     * Getter for map of data mappers.
-     * @return map of data mappers
-     */
-    public Map<String, DataMapper> getDataMappers(){
-        return this.dataMappers;
-    }
-
-    /**
      * Copy method that copy the original control object to new one deeply.
      * @param originalControl original control object
      * @return new control object
@@ -100,11 +80,11 @@ public class Control {
         newControl.unitMap = new HashMap<>();
         originalControl.unitMap.forEach((id, unit)-> newControl.unitMap.put(id, Unit.copy(unit)));
         newControl.edgeMap = new HashMap<>();
-        originalControl.edgeMap.forEach((id, edge)-> newControl.edgeMap.put(id, new Edge.EdgeBuilder()
-                .setId(id)
-                .setTailUnit(newControl.unitMap.get(edge.getTailUnit().getId()))
-                .setHeadUnit(newControl.unitMap.get(edge.getHeadUnit().getId()))
-                .setStateDeliver(StateDeliver.copy(edge.getStateDeliver()))
+        originalControl.edgeMap.forEach((id, edge)-> newControl.edgeMap.put(id, Edge.builder()
+                .id(id)
+                .tailUnit(newControl.unitMap.get(edge.getTailUnit().getId()))
+                .headUnit(newControl.unitMap.get(edge.getHeadUnit().getId()))
+                .stateDeliver(StateDeliver.copy(edge.getStateDeliver()))
                 .build()));
 
         return newControl;

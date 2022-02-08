@@ -1,18 +1,16 @@
 package unorganized.machine.deliver;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 /**
  * An interface that defines a delivery method.
  * All edges deliver state of previous unit to next unit through this interface method.
  */
+@Getter
+@NoArgsConstructor
 public class StateDeliver {
-    private boolean deliverWay;
-
-    /**
-     * Constructor of state deliver class.
-     */
-    public StateDeliver(){
-        this.deliverWay = true;
-    }
+    private boolean deliverWay = true;
 
     /**
      * Delivering method for edge class.
@@ -44,13 +42,5 @@ public class StateDeliver {
         StateDeliver stateDeliver = new StateDeliver();
         stateDeliver.deliverWay = originalStateDeliver.deliverWay;
         return stateDeliver;
-    }
-
-    /**
-     * Getter for boolean value Whether to reverse the state.
-     * @return whether to reverse the state
-     */
-    public boolean getDeliverWay(){
-        return this.deliverWay;
     }
 }
